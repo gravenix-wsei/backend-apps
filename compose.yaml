@@ -1,0 +1,9 @@
+services:
+  app:
+    environment:
+      WEB_DOCUMENT_ROOT: /app/public
+    build: .
+    ports:
+      - 8080:80
+    volumes:
+      - ./app:/app
