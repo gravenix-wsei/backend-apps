@@ -1,4 +1,5 @@
-.SILENT:
+include .env
+
 help :
 	printf  "\
 [=========== \e[0;33mProgramowanie aplikacji backendowych - projekt zaliczeniowy\e[0m ===========]\n\
@@ -10,7 +11,11 @@ Available commands: \n\
   \e[0;32mbuild\e[0m - builds docker images \n\
   \e[0;32mstart\e[0m - starts docker images \n\
   \e[0;32mstop\e[0m - stops docker images \n\
+  \e[0;32mcomposer-cli\e[0m - runs conatainer for app to use composer commands \n\
+  \e[0;32mapp-cli\e[0m - enter app cli \n\
+  \e[0;32mdatabase-cli\e[0m - enter database mysql cli as root \n\
 "
+
 
 .check-silent :
 	bash -c "${PWD}/scripts/check-project-requirements.sh -s"
@@ -36,4 +41,13 @@ start :
 stop :
 	docker compose stop
 
-.PHONY: help .check-silent check init build start stop
+composer-cli :
+	docker run --rm -it --volume="./app:/app" "composer/composer:${COMPOSER_VERSION}" bash
+
+app-cli : start
+	docker compose exec -it --workdir /app --user "www-data" app bash
+
+database-cli : start
+	docker compose exec -it --user mysql database bash -c "mysql -h localhost -u root -p'${MYSQL_ROOT_PASSWORD}'"
+
+.PHONY: help .check-silent check init build start stop composer-cli database-cli
