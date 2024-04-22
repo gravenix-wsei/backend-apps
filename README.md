@@ -40,5 +40,6 @@ Below are some of the example commands you can do using `make`:
   ```bash
   make stop
   ```
- 
 
+## Database diagram
+![db_diagram](./assets/img/db_diagram.png)
