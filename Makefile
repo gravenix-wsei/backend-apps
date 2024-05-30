@@ -22,6 +22,7 @@ Available commands: \n\
 
 init : .check-silent .env build start
 	docker compose up -d
+	docker compose exec -it app bin/setup.sh
 
 check:
 	bash -c "${PWD}/scripts/check-project-requirements.sh -v"

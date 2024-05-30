@@ -1,0 +1,16 @@
+{% block menu_base %}
+    <ul>
+        {% block menu_base_user %}
+            {{ dump(app) }}
+            {% if app.user %}
+                <div>{% trans %}Hello, %user.name%{% endtrans %}</div>
+            {% else %}
+            <div>
+                <li><a href="{{ path('front.user.register') }}">{{ 'Register'|trans }}</a></li>
+                <li><a href="{{ path('front.user.login') }}">{{ 'Login'|trans }}</a></li>
+            </div>
+            {% endif %}
+        <li></li>
+        {% endblock %}
+    </ul>
+{% endblock %}

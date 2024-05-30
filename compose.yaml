@@ -1,10 +1,24 @@
-version: '3'
-
 services:
+  app:
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      WEB_DOCUMENT_ROOT: /app/public
+      XDEBUG_CLIENT_HOST: "host.docker.internal"
+      XDEBUG_CLIENT_PORT: 9003
+      XDEBUG_IDE_KEY: app
+#    build: .
+    image: webdevops/php-nginx-dev:8.3
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/app
+    networks:
+      - intranet
+
   database:
     image: "mysql:${MYSQL_VERSION}"
     environment:
-      MYSQL_DATABASE: "${MYSQL_APP_DATABASE_NAME:-app}"
+      MYSQL_DATABASE: "${MYSQL_APP_DATABASE_NAME}"
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
       MYSQL_USER: "${MYSQL_USER}"
       MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
@@ -14,20 +28,9 @@ services:
       retries: 5
       start_period: 60s
     ports:
-      - "3306"
+      - "3306:3306"
     volumes:
       - database_data:/var/lib/mysql:rw
-    networks:
-      - intranet
-
-  app:
-    environment:
-      WEB_DOCUMENT_ROOT: /app/public
-    build: .
-    ports:
-      - "8080:80"
-    volumes:
-      - ./app:/app
     networks:
       - intranet
 
