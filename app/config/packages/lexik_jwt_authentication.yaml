@@ -6,7 +6,7 @@ lexik_jwt_authentication:
     remove_token_from_body_when_cookies_used: false
     token_extractors:
         cookie:
-            enabled: false
+            enabled: true
             name: authorizationBearer
     set_cookies:
         authorizationBearer: ~

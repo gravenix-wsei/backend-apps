@@ -12,7 +12,6 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
-            $jsonLoginAuthenticator: '@security.authenticator.json_login.api_login'
 
     _instanceof:
         Symfony\Component\EventDispatcher\EventSubscriberInterface:
@@ -26,6 +25,11 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    App\Controller\Front\User\LoginController:
+        arguments:
+            $authenticatorManager: '@security.authenticator.manager.main'
+            $jsonLoginAuthenticator: '@security.authenticator.json_login.api_login'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
