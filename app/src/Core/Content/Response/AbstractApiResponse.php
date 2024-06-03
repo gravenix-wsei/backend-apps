@@ -17,6 +17,7 @@ abstract class AbstractApiResponse extends Response
     public function __construct(int $statusCode = Response::HTTP_OK, array $headers = [])
     {
         $this->statusCode = $statusCode;
+        $this->object = new \ArrayObject();
         parent::__construct('', $this->statusCode, $headers);
     }
 

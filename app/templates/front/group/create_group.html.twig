@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CreateGroupController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Hello {{ controller_name }}! ✅</h1>
+
+    {{ dump(created) }}
+    {% if created == true %}
+    <h2>Created Group {{ createdGroupName }}</h2>
+    {% else %}
+    <h2>{{ 'Register new group'|trans }}</h2>
+    {{ form_errors(createGroupForm) }}
+
+    {{ form_start(createGroupForm) }}
+    {{ form_row(createGroupForm.name) }}
+
+    <button type="submit" class="btn">Register</button>
+    {{ form_end(createGroupForm) }}
+    {% endif %}
+</div>
+{% endblock %}

@@ -25,6 +25,7 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+            - '../src/Core/Response/'
 
     App\Controller\Front\User\LoginController:
         arguments:

@@ -4,6 +4,7 @@
             {% if app.user %}
                 <div>{% trans %}Hello, {% endtrans %} {{ app.user.firstName }} {{ app.user.lastName }}</div>
                 <div>
+                    <a href="{{ path('front.group.create') }}">{{ 'Create Group'|trans }}</a>
                     <a href="{{ path('front.user.logout') }}">{{ 'Log Out'|trans }}</a>
                 </div>
             {% else %}
