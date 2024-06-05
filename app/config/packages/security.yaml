@@ -40,9 +40,10 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/user/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api/user/register, roles: PUBLIC_ACCESS }
         - { path: ^/user/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/user/register, roles: PUBLIC_ACCESS }
         - { path: ^/user/register, roles: PUBLIC_ACCESS }
+        - { path: ^/group/, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/$, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 

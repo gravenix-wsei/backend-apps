@@ -59,7 +59,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'created_at')]
     private \DateTimeImmutable $createdAt;
 
-    public function getId(): ?string
+    public function getId(): Uuid
     {
         return $this->id;
     }
