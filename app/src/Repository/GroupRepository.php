@@ -21,6 +21,20 @@ class GroupRepository extends ServiceEntityRepository
         parent::__construct($registry, Group::class);
     }
 
+    /**
+     * @return Group[]
+     */
+    public function findGroupsByTerm(string $term, int $limit = 10, int $page = 1): array
+    {
+        return $this->createQueryBuilder('g')
+            ->where('LOWER(g.name) LIKE LOWER(:term)')
+            ->setParameter('term', \sprintf('%%%s%%', $term))
+            ->setMaxResults($limit)
+            ->setFirstResult(($page-1)*$limit)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Group[] Returns an array of Group objects
 //     */

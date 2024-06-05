@@ -15,28 +15,28 @@ class Group
     #[ORM\Column(name: 'group_id', type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private Uuid $group_id;
+    private Uuid $groupId;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: 'uuid')]
+    #[ORM\Column(name: 'created_by' ,type: 'uuid')]
     #[ORM\OneToMany(targetEntity: User::class)]
-    private ?Uuid $created_by = null;
+    private ?Uuid $createdBy = null;
 
-    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private ?\DateTimeImmutable $created_at = null;
+    #[ORM\Column(name: 'created_at', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private ?\DateTimeImmutable $createdAt = null;
 
-    public function setGroupId(Uuid $group_id): static
+    public function setGroupId(Uuid $groupId): static
     {
-        $this->group_id = $group_id;
+        $this->groupId = $groupId;
 
         return $this;
     }
 
     public function getGroupId(): Uuid
     {
-        return $this->group_id;
+        return $this->groupId;
     }
 
     public function getName(): ?string
@@ -53,24 +53,24 @@ class Group
 
     public function getCreatedBy(): ?Uuid
     {
-        return $this->created_by;
+        return $this->createdBy;
     }
 
-    public function setCreatedBy(Uuid $created_by): static
+    public function setCreatedBy(Uuid $createdBy): static
     {
-        $this->created_by = $created_by;
+        $this->createdBy = $createdBy;
 
         return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
