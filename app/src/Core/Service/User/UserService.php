@@ -4,8 +4,11 @@ namespace App\Core\Service\User;
 
 use App\Entity\Group;
 use App\Entity\User;
+use App\Entity\UserFriend;
+use App\Repository\UserFriendRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Uid\Uuid;
 
 class UserService implements UserServiceInterface
 {
@@ -37,5 +40,60 @@ class UserService implements UserServiceInterface
         }
 
         return $entities;
+    }
+
+    public function inviteUser(Uuid $invitingId, Uuid $invitedId): bool
+    {
+        try {
+            $friendRequest = new UserFriend();
+            $friendRequest->setUserId($invitingId);
+            $friendRequest->setFriendId($invitedId);
+            $friendRequest->setCreatedAt(new \DateTimeImmutable());
+
+            $this->entityManager->persist($friendRequest);
+            $this->entityManager->flush();
+        } catch (\Throwable) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function acceptUser(Uuid $userId, Uuid $acceptedId): bool
+    {
+        try {
+            $repository = $this->entityManager->getRepository(UserFriend::class);
+            if (!$repository instanceof UserFriendRepository) {
+                return false;
+            }
+            $friendRequest = $repository->findUserInvitation($userId, $acceptedId);
+            if (!$friendRequest) {
+                return false;
+            }
+
+            $friendRequest->setAccepted(true);
+            $this->entityManager->flush();
+        } catch (\Throwable) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return UserFriend[]
+     */
+    public function listUserFriendRequests(Uuid $userId): array
+    {
+        try {
+            $repository = $this->entityManager->getRepository(UserFriend::class);
+            if (!$repository instanceof UserFriendRepository) {
+                return [];
+            }
+
+            return $repository->getFriendRequestsFor($userId);
+        } catch (\Throwable) {
+            return [];
+        }
     }
 }
