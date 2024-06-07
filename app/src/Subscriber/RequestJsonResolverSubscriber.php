@@ -18,7 +18,7 @@ class RequestJsonResolverSubscriber implements EventSubscriberInterface
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        if ($request->headers->get('Content-Type') !== 'application/json') {
+        if ($request->headers->get('Content-Type') !== 'application/json' || empty($request->getContent())) {
             return;
         }
 

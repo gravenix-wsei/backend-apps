@@ -27,7 +27,10 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($request->getMethod() === Request::METHOD_POST) {
-            return $this->registrationRoute->register($request);
+            $response = $this->registrationRoute->register($request);
+            if ($response->getStatusCode() === Response::HTTP_CREATED) {
+                return $this->redirectToRoute('front.home');
+            }
         }
 
         return $this->render('registration/register.html.twig', [
