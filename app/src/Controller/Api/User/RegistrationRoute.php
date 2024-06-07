@@ -25,7 +25,7 @@ class RegistrationRoute extends AbstractController
     public function register(Request $request): Response
     {
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form = $this->createForm(RegistrationFormType::class, $user, );
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -42,8 +42,7 @@ class RegistrationRoute extends AbstractController
             $this->entityManager->flush();
 
             // do anything else you need here, like send an email
-
-            return $this->redirectToRoute('front.home');
+            return new Response('', Response::HTTP_CREATED);
         }
 
         throw new BadRequestHttpException('Invalid form');

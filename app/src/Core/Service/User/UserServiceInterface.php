@@ -18,10 +18,15 @@ interface UserServiceInterface
 
     public function inviteUser(Uuid $invitingId, Uuid $invitedId): bool;
 
-    public function acceptUser(Uuid $userId, Uuid $acceptedId): bool;
+    public function acceptInvite(Uuid $userId, Uuid $acceptedId): bool;
 
     /**
      * @return UserFriend[]
      */
     public function listUserFriendRequests(Uuid $userId): array;
+
+    /**
+     * @return UserFriend[]
+     */
+    public function listUserFriend(Uuid $userId): array;
 }

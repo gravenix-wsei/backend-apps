@@ -5,27 +5,36 @@ namespace App\Entity;
 use App\Repository\UserFriendRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserFriendRepository::class)]
+#[ORM\UniqueConstraint(
+    name: 'uniq_friends',
+    columns: ['user_id', 'friend_id']
+)]
 class UserFriend
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid')]
-    #[ORM\OneToOne(targetEntity: User::class)]
+    #[ORM\Column(type: UuidType::NAME)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    private ?Uuid $id = null;
+
+    #[ORM\Column(type: 'uuid', unique: false)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?Uuid $user_id = null;
 
-    #[ORM\OneToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn('user_id', 'user_id')]
     private ?User $user = null;
 
-    #[ORM\OneToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn('friend_id', 'user_id')]
     private ?User $friend = null;
 
-    #[ORM\Id]
-    #[ORM\Column(type: 'uuid')]
-    #[ORM\OneToOne(targetEntity: User::class)]
+    #[ORM\Column(type: 'uuid', unique: false)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?Uuid $friend_id = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
@@ -33,6 +42,18 @@ class UserFriend
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
+
+    public function getId(): ?Uuid
+    {
+        return $this->id;
+    }
+
+    public function setId(?Uuid $id): static
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     public function getUserId(): ?Uuid
     {
@@ -90,5 +111,21 @@ class UserFriend
     public function getFriend(): User
     {
         return $this->friend;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user_id = $user->getId();
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function setFriend(?User $friend): static
+    {
+        $this->friend_id = $friend->getId();
+        $this->friend = $friend;
+
+        return $this;
     }
 }

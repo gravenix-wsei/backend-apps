@@ -45,9 +45,10 @@ class UserService implements UserServiceInterface
     public function inviteUser(Uuid $invitingId, Uuid $invitedId): bool
     {
         try {
+            $userRepository = $this->entityManager->getRepository(User::class);
             $friendRequest = new UserFriend();
-            $friendRequest->setUserId($invitingId);
-            $friendRequest->setFriendId($invitedId);
+            $friendRequest->setUser($userRepository->find($invitingId));
+            $friendRequest->setFriend($userRepository->find($invitedId));
             $friendRequest->setCreatedAt(new \DateTimeImmutable());
 
             $this->entityManager->persist($friendRequest);
@@ -59,7 +60,7 @@ class UserService implements UserServiceInterface
         return true;
     }
 
-    public function acceptUser(Uuid $userId, Uuid $acceptedId): bool
+    public function acceptInvite(Uuid $userId, Uuid $acceptedId): bool
     {
         try {
             $repository = $this->entityManager->getRepository(UserFriend::class);
@@ -92,6 +93,35 @@ class UserService implements UserServiceInterface
             }
 
             return $repository->getFriendRequestsFor($userId);
+        } catch (\Throwable) {
+            return [];
+        }
+    }
+
+    /**
+     * @return User[]
+     */
+    public function listUserFriend(Uuid $userId): array
+    {
+        try {
+            $repository = $this->entityManager->getRepository(UserFriend::class);
+            if (!$repository instanceof UserFriendRepository) {
+                return [];
+            }
+
+            $userFriends = $repository->getUserFriendsFor($userId);
+
+            return \array_values(\array_filter(\array_map(
+                static function($userFriend) use ($userId) {
+                    if (!$userFriend instanceof UserFriend) {
+                        return null;
+                    }
+
+                    return $userFriend->getUserId()->toHex() === $userId->toHex() ?
+                        $userFriend->getFriend() : $userFriend->getUser();
+                },
+                $userFriends
+            )));
         } catch (\Throwable) {
             return [];
         }

@@ -27,10 +27,13 @@ class UserFriendRepository extends ServiceEntityRepository
     public function findUserInvitation(Uuid $userId, Uuid $friendId): ?UserFriend
     {
         return $this->createQueryBuilder('uf')
-            ->where('user_id = :userId')
-            ->andWhere('friend_id = :friend_id')
-            ->setParameter('userId', $userId)
-            ->setParameter('friendId', $friendId)
+            ->innerJoin(User::class, 'u', Join::WITH, 'u = uf.user')
+            ->innerJoin(User::class, 'f', Join::WITH, 'f = uf.friend')
+            ->where('uf.user_id = :invitedId')
+            ->andWhere('uf.friend_id = :userId')
+            ->andWhere('uf.accepted = 0')
+            ->setParameter('userId', $userId->toBinary())
+            ->setParameter('invitedId', $friendId->toBinary())
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -42,9 +45,26 @@ class UserFriendRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('uf')
             ->select('uf, u')
+            ->leftJoin(User::class, 'u', Join::WITH, 'u = uf.user')
             ->where('uf.friend_id = :userId')
-            ->leftJoin(User::class, 'u', Join::WITH, 'u = uf.friend')
             ->andWhere('uf.accepted = 0')
+            ->setParameter('userId', $userId->toBinary())
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return UserFriend[]
+     */
+    public function getUserFriendsFor(Uuid $userId): array
+    {
+        return $this->createQueryBuilder('uf')
+            ->select('uf, u, f')
+            ->leftJoin(User::class, 'u', Join::WITH, 'u = uf.friend')
+            ->leftJoin(User::class, 'f', Join::WITH, 'f = uf.user')
+            ->where('uf.user_id = :userId')
+            ->orWhere('uf.friend_id = :userId')
+            ->andWhere('uf.accepted = 1')
             ->setParameter('userId', $userId->toBinary())
             ->getQuery()
             ->getResult();
