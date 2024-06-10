@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api\Group;
 
+use App\Core\Content\Response\AbstractApiResponse;
 use App\Core\Content\Response\FailureResponse;
 use App\Core\Content\Response\SuccessResponse;
 use App\Core\Service\Group\GroupServiceInterface;
@@ -23,7 +24,7 @@ class DeleteGroupRoute extends AbstractController
     }
 
     #[Route('/api/group/{groupId}', name: 'api.group.delete', methods: ['DELETE'])]
-    public function delete(Uuid $groupId, Security $security): Response
+    public function delete(Uuid $groupId, Security $security): AbstractApiResponse
     {
         $user =  $this->getUserFromSecurity($security);
         if (!$groupId) {

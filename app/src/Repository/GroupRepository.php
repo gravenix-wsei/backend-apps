@@ -42,7 +42,6 @@ class GroupRepository extends ServiceEntityRepository
      */
     public function findUserGroups(Uuid $userId): array
     {
-        // TODO add groups from invitations
         return $this->createQueryBuilder('g')
             ->where('g.createdBy = :userId')
             ->setParameter('userId', $userId->toBinary())
