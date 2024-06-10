@@ -14,6 +14,7 @@ Available commands: \n\
   \e[0;32mcomposer-cli\e[0m - runs conatainer for app to use composer commands \n\
   \e[0;32mapp-cli\e[0m - enter app cli \n\
   \e[0;32mdatabase-cli\e[0m - enter database mysql cli as root \n\
+  \e[0;32mlogs\e[0m - displays logs from docker containers \n\
 "
 
 
@@ -51,4 +52,7 @@ app-cli : start
 database-cli : start
 	docker compose exec -it --user mysql database bash -c "mysql -h localhost -u root -p'${MYSQL_ROOT_PASSWORD}'"
 
-.PHONY: help .check-silent check init build start stop composer-cli database-cli
+logs : start
+	docker compose logs --follow --tail 300
+
+.PHONY: help .check-silent check init build start stop composer-cli database-cli logs
