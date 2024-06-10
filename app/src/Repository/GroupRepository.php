@@ -49,4 +49,16 @@ class GroupRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function isUserAllowedToDeleteGroup(Uuid $groupId, Uuid $userId): bool
+    {
+        return $this->createQueryBuilder('g')
+            ->where('g.createdBy = :userId')
+            ->andWhere('g.groupId = :groupId')
+            ->setParameter('groupId', $groupId->toBinary())
+            ->setParameter('userId', $userId->toBinary())
+            ->getQuery()
+            ->getOneOrNullResult() !== null;
+
+    }
 }

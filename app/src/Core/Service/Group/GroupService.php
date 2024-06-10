@@ -69,4 +69,34 @@ class GroupService implements GroupServiceInterface
 
         return $repository->findUserGroups($user->getId());
     }
+
+    public function canDeleteGroup(Uuid $groupId, Uuid $userId): bool
+    {
+        $repository = $this->entityManager->getRepository(Group::class);
+        if (!$repository instanceof GroupRepository) {
+            return false;
+        }
+
+        return $repository->isUserAllowedToDeleteGroup($groupId, $userId);
+    }
+
+    public function deleteGroup(Uuid $groupId): bool
+    {
+        $repository = $this->entityManager->getRepository(Group::class);
+        if (!$repository instanceof GroupRepository) {
+            return false;
+        }
+        $group = $repository->find($groupId);
+        if (!$group instanceof Group) {
+            return false;
+        }
+        try {
+            $this->entityManager->remove($group);
+            $this->entityManager->flush();
+        } catch (\Throwable) {
+            return false;
+        }
+
+        return true;
+    }
 }
