@@ -14,6 +14,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
 use Symfony\Component\Routing\Attribute\Route;
@@ -83,7 +84,7 @@ class FriendsRoute extends AbstractController
     {
         $user = $security->getUser();
         if (!$user instanceof User) {
-            throw new PreconditionFailedHttpException('Not valid user performing a request');
+            throw new AccessDeniedHttpException('Invalid user');
         }
         return $user;
     }

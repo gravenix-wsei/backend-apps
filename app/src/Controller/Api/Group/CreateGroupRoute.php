@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api\Group;
 
+use App\Core\Content\Response\AbstractApiResponse;
 use App\Core\Content\Response\FailureResponse;
 use App\Core\Content\Response\SuccessResponse;
 use App\Core\Service\Group\GroupServiceInterface;
@@ -15,7 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use function PHPUnit\Framework\throwException;
 
 class CreateGroupRoute extends AbstractController
 {
@@ -26,7 +26,7 @@ class CreateGroupRoute extends AbstractController
     }
 
     #[Route('/api/group/create', methods: ['POST'])]
-    public function __invoke(Request $request, Security $security): Response
+    public function __invoke(Request $request, Security $security): AbstractApiResponse
     {
         $name = $request->get('name');
         $user = $security->getUser();

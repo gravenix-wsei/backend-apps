@@ -12,12 +12,12 @@ class GroupSearchResultResponse extends AbstractApiResponse
     const RESPONSE_TYPE = 'group_search_results';
 
     /**
-     * @param Group[] $groups
+     * @param Group[] $invites
      */
-    public function __construct(array $groups)
+    public function __construct(array $invites)
     {
         parent::__construct();
-        $this->object['groups'] = $groups;
+        $this->object['groups'] = $invites;
     }
 
     /**

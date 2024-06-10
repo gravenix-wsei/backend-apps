@@ -100,6 +100,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    public function addAdminForGroup(Uuid $groupId): static
+    {
+        $this->roles[] = $this->getGroupAdminRoleKey($groupId);
+
+        return $this;
+    }
+
+    public function isAdminOfGroup(Uuid $groupId): bool
+    {
+        return \in_array($this->getGroupAdminRoleKey($groupId), $this->roles, true);
+    }
+
     /**
      * @param list<string> $roles
      */
@@ -168,5 +180,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    private function getGroupAdminRoleKey(Uuid $groupId): string
+    {
+        return 'ROLE_GROUP_ADMIN_' . $groupId->toHex();
     }
 }

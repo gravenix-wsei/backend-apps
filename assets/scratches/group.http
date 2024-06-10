@@ -1,0 +1,88 @@
+//@no-log
+POST {{baseUrl}}/api/user/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+> {%
+    client.global.set('authToken', response.body.token);
+%}
+
+
+###
+
+//@no-log
+POST {{baseUrl}}/api/group/create
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Grupa z uprawnieniami"
+}
+
+###
+
+//@no-log
+POST {{baseUrl}}/api/group/search
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "term": "test",
+  "limit": 5,
+  "page": 1
+}
+
+###
+
+//@no-log
+PUT {{baseUrl}}/api/group/019002b8-fdca-7166-b2b2-918fe1214789/user/invite/018ff2ab-927c-7acf-a8e2-2547d48ce2ed
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+//@no-log
+GET {{baseUrl}}/api/group/invites
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+//@no-log
+PUT {{baseUrl}}/api/group/user/accept/019002cd-bb8f-7e9f-811d-d98cac09b98f
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+//@no-log
+DELETE {{baseUrl}}/api/group/019002b8-fdca-7166-b2b2-918fe1214789/user/remove/018ff2ab-927c-7acf-a8e2-2547d48ce2ed
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+//@no-log
+GET {{baseUrl}}/api/groups
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+//@no-log
+DELETE {{baseUrl}}/api/group/018fe906-7a98-7c56-bcf1-e73eca0efe60
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
