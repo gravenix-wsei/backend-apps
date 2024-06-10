@@ -56,4 +56,17 @@ class GroupService implements GroupServiceInterface
 
         return $entities;
     }
+
+    /**
+     * @return User[]
+     */
+    public function getUserGroups(User $user): array
+    {
+        $repository = $this->entityManager->getRepository(Group::class);
+        if (!$repository instanceof GroupRepository) {
+            return [];
+        }
+
+        return $repository->findUserGroups($user->getId());
+    }
 }

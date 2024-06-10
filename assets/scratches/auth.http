@@ -1,0 +1,77 @@
+//@no-log
+POST {{baseUrl}}/api/user/register
+Accept: application/json
+Content-Type: application/json
+
+{
+  "registration_form": {
+    "email": "radek@example.com",
+    "username": "radek",
+    "plainPassword": "haslo123",
+    "firstName": "Radosław",
+    "lastName": "Kornik",
+    "agreeTerms": 1
+  }
+}
+
+###
+
+//@no-log
+POST {{baseUrl}}/api/user/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+> {%
+    client.global.set('authToken', response.body.token);
+%}
+
+###
+
+//@no-log
+POST {{baseUrl}}/api/user/search
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "term": "bartek",
+  "limit": 5,
+  "page": 1
+}
+
+###
+
+//@no-log
+GET {{baseUrl}}/api/user/friends
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+//@no-log
+PUT {{baseUrl}}/api/user/friends/invite/018f11af-69c3-7875-9169-0cb221434298
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+//@no-log
+GET {{baseUrl}}/api/user/friends/invites
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+//@no-log
+PUT {{baseUrl}}/api/user/friends/accept/018ff2ab-927c-7acf-a8e2-2547d48ce2ed
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}

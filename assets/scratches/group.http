@@ -1,0 +1,48 @@
+//@no-log
+POST {{baseUrl}}/api/user/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+> {%
+    client.global.set('authToken', response.body.token);
+%}
+
+
+###
+
+//@no-log
+POST {{baseUrl}}/api/group/create
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Grupa testowa 1"
+}
+
+###
+
+//@no-log
+POST {{baseUrl}}/api/group/search
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "term": "test",
+  "limit": 5,
+  "page": 1
+}
+
+###
+
+//@no-log
+GET {{baseUrl}}/api/groups
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}

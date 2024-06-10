@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Group;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends ServiceEntityRepository<Group>
@@ -35,28 +37,16 @@ class GroupRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-//    /**
-//     * @return Group[] Returns an array of Group objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('g')
-//            ->andWhere('g.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('g.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Group
-//    {
-//        return $this->createQueryBuilder('g')
-//            ->andWhere('g.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * @return Group[]
+     */
+    public function findUserGroups(Uuid $userId): array
+    {
+        // TODO add groups from invitations
+        return $this->createQueryBuilder('g')
+            ->where('g.createdBy = :userId')
+            ->setParameter('userId', $userId->toBinary())
+            ->getQuery()
+            ->getResult();
+    }
 }
