@@ -86,3 +86,36 @@ DELETE {{baseUrl}}/api/group/018fe906-7a98-7c56-bcf1-e73eca0efe60
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
+
+###
+
+POST {{baseUrl}}/api/group/post/019002b8-fdca-7166-b2b2-918fe1214789
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "content": "Hello World! This is my first post!"
+}
+
+###
+
+DELETE {{baseUrl}}/api/group/post/delete/019008df-3746-798c-b9d4-8861548ad5fd
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+GET {{baseUrl}}/api/group/019002b8-fdca-7166-b2b2-918fe1214789/posts
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+// microservice authorization
+GET http://localhost:8081/post/group/019002b8-fdca-7166-b2b2-918fe1214789/018f11af-69c3-7875-9169-0cb221434298
+Accept: application/json
+Content-Type: application/json
+X-My-Auth-Header: 123456789

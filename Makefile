@@ -13,6 +13,7 @@ Available commands: \n\
   \e[0;32mstop\e[0m - stops docker images \n\
   \e[0;32mcomposer-cli\e[0m - runs conatainer for app to use composer commands \n\
   \e[0;32mapp-cli\e[0m - enter app cli \n\
+  \e[0;32mapp-cli\e[0m - enter post microservice cli \n\
   \e[0;32mdatabase-cli\e[0m - enter database mysql cli as root \n\
   \e[0;32mlogs\e[0m - displays logs from docker containers \n\
 "
@@ -44,10 +45,13 @@ stop :
 	docker compose stop
 
 composer-cli :
-	docker run --rm -it --volume="./app:/app" "composer/composer:${COMPOSER_VERSION}" bash
+	docker run --rm -it --volume="./app:/app" --volume="./post-service:/post-service" "composer/composer:${COMPOSER_VERSION}" bash
 
 app-cli : start
 	docker compose exec -it --workdir /app --user "www-data" app bash
+
+post-service-cli: start
+	docker compose exec -it --workdir /app --user "www-data" post-service bash
 
 database-cli : start
 	docker compose exec -it --user mysql database bash -c "mysql -h localhost -u root -p'${MYSQL_ROOT_PASSWORD}'"
@@ -55,4 +59,4 @@ database-cli : start
 logs : start
 	docker compose logs --follow --tail 300
 
-.PHONY: help .check-silent check init build start stop composer-cli database-cli logs
+.PHONY: help .check-silent check init build start stop composer-cli database-cli logs post-service-cli

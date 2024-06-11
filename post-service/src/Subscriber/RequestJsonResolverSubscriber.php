@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Subscriber;
+namespace PostService\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;

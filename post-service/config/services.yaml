@@ -5,13 +5,11 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
 
-
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-        bind:
 
     _instanceof:
         Symfony\Component\EventDispatcher\EventSubscriberInterface:
@@ -19,23 +17,16 @@ services:
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
-    App\:
+    PostService\:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-            - '../src/Core/Response/'
 
-    App\Controller\Front\User\LoginController:
+    PostService\Subscriber\RequestAuthHeaderVerifier:
         arguments:
-            $authenticatorManager: '@security.authenticator.manager.main'
-            $jsonLoginAuthenticator: '@security.authenticator.json_login.api_login'
-
-    App\Core\Service\Post\PostService:
-        arguments:
-            $baseUrl: '%env(resolve:POST_SERVICE_URL)%'
-            $authToken: '%env(resolve:AUTH_TOKEN)%'
+            $authValue: '%env(resolve:AUTH_TOKEN)%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

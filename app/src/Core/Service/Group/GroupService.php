@@ -8,6 +8,8 @@ use App\Entity\UserGroup;
 use App\Repository\GroupRepository;
 use App\Repository\UserGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Symfony\Component\Uid\Uuid;
 
 class GroupService implements GroupServiceInterface
@@ -191,5 +193,14 @@ class GroupService implements GroupServiceInterface
         }
 
         return true;
+    }
+
+    public function getGroup(Uuid $groupId): ?Group
+    {
+        try {
+            return $this->entityManager->find(Group::class, $groupId);
+        } catch (OptimisticLockException|ORMException) {
+            return null;
+        }
     }
 }
