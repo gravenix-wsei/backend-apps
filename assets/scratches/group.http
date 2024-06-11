@@ -86,3 +86,14 @@ DELETE {{baseUrl}}/api/group/018fe906-7a98-7c56-bcf1-e73eca0efe60
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
+
+###
+
+POST {{baseUrl}}/api/group/post/019002b8-fdca-7166-b2b2-918fe1214789
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "content": "Hello World! This is my first post!"
+}

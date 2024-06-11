@@ -32,5 +32,9 @@ services:
             $authenticatorManager: '@security.authenticator.manager.main'
             $jsonLoginAuthenticator: '@security.authenticator.json_login.api_login'
 
+    App\Core\Service\Post\PostService:
+        arguments:
+            $baseUrl: '%env(resolve:POST_SERVICE_URL)%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

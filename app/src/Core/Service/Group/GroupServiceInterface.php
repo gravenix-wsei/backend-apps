@@ -6,6 +6,8 @@ use App\Entity\Group;
 use App\Entity\User;
 use App\Entity\UserGroup;
 use App\Repository\GroupRepository;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Symfony\Component\Uid\Uuid;
 
 interface GroupServiceInterface
@@ -36,4 +38,6 @@ interface GroupServiceInterface
     public function getInvitesForUser(User $user): array;
 
     public function acceptInvitationAsUser(Uuid $invitationId, User $user): bool;
+
+    public function getGroup(Uuid $groupId): ?Group;
 }
