@@ -44,7 +44,7 @@ stop :
 	docker compose stop
 
 composer-cli :
-	docker run --rm -it --volume="./app:/app" "composer/composer:${COMPOSER_VERSION}" bash
+	docker run --rm -it --volume="./app:/app" --volume="./post-service:/post-service" "composer/composer:${COMPOSER_VERSION}" bash
 
 app-cli : start
 	docker compose exec -it --workdir /app --user "www-data" app bash

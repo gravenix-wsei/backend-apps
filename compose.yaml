@@ -6,12 +6,24 @@ services:
       XDEBUG_CLIENT_HOST: "host.docker.internal"
       XDEBUG_CLIENT_PORT: 9003
       XDEBUG_IDE_KEY: app
-#    build: .
     image: webdevops/php-nginx-dev:8.3
     ports:
       - "8080:80"
     volumes:
       - ./app:/app
+    networks:
+      - intranet
+
+  post-service:
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      WEB_DOCUMENT_ROOT: /app/public
+      XDEBUG_CLIENT_HOST: "host.docker.internal"
+      XDEBUG_CLIENT_PORT: 9003
+      XDEBUG_IDE_KEY: post-service
+    image: webdevops/php-nginx-dev:8.3
+    volumes:
+      - ./post-service:/app
     networks:
       - intranet
 
