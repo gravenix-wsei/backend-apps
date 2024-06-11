@@ -95,7 +95,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-  "content": "Hello World! This is my 2nd post!"
+  "content": "Hello World! This is my first post!"
 }
 
 ###
@@ -111,3 +111,11 @@ GET {{baseUrl}}/api/group/019002b8-fdca-7166-b2b2-918fe1214789/posts
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
+
+###
+
+// microservice authorization
+GET http://localhost:8081/post/group/019002b8-fdca-7166-b2b2-918fe1214789/018f11af-69c3-7875-9169-0cb221434298
+Accept: application/json
+Content-Type: application/json
+X-My-Auth-Header: 123456789

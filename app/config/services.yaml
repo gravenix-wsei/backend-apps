@@ -35,6 +35,7 @@ services:
     App\Core\Service\Post\PostService:
         arguments:
             $baseUrl: '%env(resolve:POST_SERVICE_URL)%'
+            $authToken: '%env(resolve:AUTH_TOKEN)%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

@@ -7,6 +7,7 @@ services:
       XDEBUG_CLIENT_PORT: 9003
       XDEBUG_IDE_KEY: app
       POST_SERVICE_URL: "http://post-service"
+      AUTH_TOKEN: ${AUTH_TOKEN:-}
     image: webdevops/php-nginx-dev:8.3
     ports:
       - "8080:80"
@@ -22,6 +23,7 @@ services:
       XDEBUG_CLIENT_HOST: "host.docker.internal"
       XDEBUG_CLIENT_PORT: 9003
       XDEBUG_IDE_KEY: post-service
+      AUTH_TOKEN: ${AUTH_TOKEN:-}
     image: webdevops/php-nginx-dev:8.3
     volumes:
       - ./post-service:/app

@@ -14,7 +14,8 @@ class PostService implements PostServiceInterface
 {
     public function __construct(
         private readonly string $baseUrl,
-        private readonly HttpClientInterface $httpClient
+        private readonly HttpClientInterface $httpClient,
+        private readonly string $authToken
     ) {
     }
 
@@ -49,10 +50,7 @@ class PostService implements PostServiceInterface
                 Request::METHOD_POST,
                 $this->baseUrl . '/post/create',
                 [
-                    'headers' => [
-                        'Content-Type' => 'application/json',
-                        'Accept' => 'application/json',
-                    ],
+                    'headers' => $this->getRequestHeaders(),
                     'body' => \json_encode($data),
                 ]
             );
@@ -70,10 +68,7 @@ class PostService implements PostServiceInterface
                 Request::METHOD_DELETE,
                 $this->baseUrl . '/post/delete/' . $postId->toRfc4122(),
                 [
-                    'headers' => [
-                        'Content-Type' => 'application/json',
-                        'Accept' => 'application/json',
-                    ],
+                    'headers' => $this->getRequestHeaders(),
                     'body' => \json_encode(['userId' => $userId->toRfc4122()]),
                 ]
             )->getStatusCode() === Response::HTTP_OK;
@@ -89,10 +84,7 @@ class PostService implements PostServiceInterface
                 Request::METHOD_GET,
                 $this->baseUrl . '/post/group/' . $groupId->toRfc4122() . '/' . $userId->toRfc4122(),
                 [
-                    'headers' => [
-                        'Content-Type' => 'application/json',
-                        'Accept' => 'application/json',
-                    ],
+                    'headers' => $this->getRequestHeaders(),
                     'body' => \json_encode(['userId' => $userId->toRfc4122()]),
                 ]
             );
@@ -104,5 +96,14 @@ class PostService implements PostServiceInterface
         } catch (TransportExceptionInterface) {
             return [];
         }
+    }
+
+    private function getRequestHeaders(): array
+    {
+        return [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'X-My-Auth-Header' => $this->authToken,
+        ];
     }
 }
