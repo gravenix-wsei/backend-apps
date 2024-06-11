@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
@@ -25,8 +26,8 @@ class PostController extends AbstractController
     ) {
     }
 
-    #[Route('/api/group/post/{groupId}', name: 'app_api_group_post')]
-    public function index(Uuid $groupId, Request $request, Security $security): AbstractApiResponse
+    #[Route('/api/group/post/{groupId}', name: 'api.group.post.create', methods: ['POST'])]
+    public function create(Uuid $groupId, Request $request, Security $security): AbstractApiResponse
     {
         $user = $this->getUserFromSecurity($security);
         $group = $this->groupService->getGroup($groupId);
@@ -36,6 +37,18 @@ class PostController extends AbstractController
         }
 
         if (!$this->postService->createPost($user, $group, $content)) {
+            return new FailureResponse();
+        }
+
+        return new SuccessResponse();
+    }
+
+    #[Route('/api/group/post/delete/{postId}', name: 'api.group.post.delete', methods: ['DELETE'])]
+    public function delete(Uuid $postId, Security $security): Response
+    {
+        $userId = $this->getUserFromSecurity($security)->getId();
+
+        if (!$this->postService->deletePost($userId, $postId)) {
             return new FailureResponse();
         }
 

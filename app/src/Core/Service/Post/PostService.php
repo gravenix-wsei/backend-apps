@@ -6,6 +6,7 @@ use App\Entity\Group;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -26,6 +27,11 @@ class PostService implements PostServiceInterface
         ];
 
         return $this->sendCreatePost($data);
+    }
+
+    public function deletePost(Uuid $userId, Uuid $postId): bool
+    {
+        return $this->sendDeletePost($userId, $postId);
     }
 
     /**
@@ -49,6 +55,43 @@ class PostService implements PostServiceInterface
             return $response->getStatusCode() === Response::HTTP_CREATED;
         } catch (TransportExceptionInterface) {
             return false;
+        }
+    }
+
+    private function sendDeletePost(Uuid $userId, Uuid $postId): bool
+    {
+        try {
+            return $this->httpClient->request(
+                Request::METHOD_DELETE,
+                $this->baseUrl . '/post/delete/' . $postId->toRfc4122(),
+                [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ],
+                    'body' => \json_encode(['userId' => $userId->toRfc4122()])
+                ]
+            )->getStatusCode() === Response::HTTP_OK;
+        } catch (TransportExceptionInterface) {
+            return false;
+        }
+    }
+
+    private function sendGetPostsForGroup(Uuid $groupId): array
+    {
+        try {
+            return \json_decode($this->httpClient->request(
+                    Request::METHOD_GET,
+                    $this->baseUrl . '/post/group/' . $groupId->toRfc4122(),
+                    [
+                        'headers' => [
+                            'Content-Type' => 'application/json',
+                            'Accept' => 'application/json',
+                        ],
+                    ]
+                )->getContent(), true, flags: \JSON_THROW_ON_ERROR) ?: [];
+        } catch (TransportExceptionInterface) {
+            return [];
         }
     }
 }
