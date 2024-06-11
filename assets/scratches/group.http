@@ -95,12 +95,19 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-  "content": "Hello World! This is my first post!"
+  "content": "Hello World! This is my 2nd post!"
 }
 
 ###
 
 DELETE {{baseUrl}}/api/group/post/delete/019008df-3746-798c-b9d4-8861548ad5fd
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+GET {{baseUrl}}/api/group/019002b8-fdca-7166-b2b2-918fe1214789/posts
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{authToken}}

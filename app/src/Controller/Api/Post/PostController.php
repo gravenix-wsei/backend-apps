@@ -4,6 +4,7 @@ namespace App\Controller\Api\Post;
 
 use App\Core\Content\Response\AbstractApiResponse;
 use App\Core\Content\Response\FailureResponse;
+use App\Core\Content\Response\Post\PostResponse;
 use App\Core\Content\Response\SuccessResponse;
 use App\Core\Service\Group\GroupServiceInterface;
 use App\Core\Service\Post\PostServiceInterface;
@@ -44,7 +45,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/api/group/post/delete/{postId}', name: 'api.group.post.delete', methods: ['DELETE'])]
-    public function delete(Uuid $postId, Security $security): Response
+    public function delete(Uuid $postId, Security $security): AbstractApiResponse
     {
         $userId = $this->getUserFromSecurity($security)->getId();
 
@@ -53,6 +54,19 @@ class PostController extends AbstractController
         }
 
         return new SuccessResponse();
+    }
+
+    #[Route('/api/group/{groupId}/posts', name: 'api.group.posts', methods: ['GET'])]
+    public function getPosts(Uuid $groupId, Security $security): AbstractApiResponse
+    {
+        $userId = $this->getUserFromSecurity($security)->getId();
+
+        $posts = $this->postService->getPosts($userId, $groupId);
+        if (empty($posts)) {
+            return new FailureResponse();
+        }
+
+        return new PostResponse($posts);
     }
 
     private function getUserFromSecurity(Security $security): User

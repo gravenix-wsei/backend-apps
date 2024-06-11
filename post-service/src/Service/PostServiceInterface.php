@@ -11,7 +11,7 @@ interface PostServiceInterface
 
     public function canUserPostToGroup(Uuid $userId, Uuid $groupId): bool;
 
-    public function getPostsFromGroup(Uuid $groupId): array;
+    public function getPostsFromGroup(Uuid $userId, Uuid $groupId): array;
 
     public function deletePost(Uuid $userId, Uuid $postId): bool;
 }

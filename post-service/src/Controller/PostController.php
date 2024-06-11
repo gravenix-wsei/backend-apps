@@ -48,10 +48,10 @@ class PostController extends AbstractController
         return new Response(status: Response::HTTP_OK);
     }
 
-    #[Route('/post/group/{groupId}', name: 'post-service.post.get', methods: ['GET'])]
-    public function getPosts(Uuid $groupId): Response
+    #[Route('/post/group/{groupId}/{userId}', name: 'post-service.post.get', methods: ['GET'])]
+    public function getPosts(Uuid $groupId, Uuid $userId): Response
     {
-        $posts = $this->postService->getPostsFromGroup($groupId);
+        $posts = $this->postService->getPostsFromGroup($userId, $groupId);
 
         return new JsonResponse($posts);
     }

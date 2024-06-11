@@ -8,8 +8,9 @@ use Symfony\Component\Uid\Uuid;
 
 interface PostServiceInterface
 {
-
     public function createPost(User $user, Group $group, string $content): bool;
 
     public function deletePost(Uuid $userId, Uuid $postId): bool;
+
+    public function getPosts(Uuid $userId, Uuid $groupId): array;
 }

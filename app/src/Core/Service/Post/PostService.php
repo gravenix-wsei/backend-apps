@@ -34,6 +34,11 @@ class PostService implements PostServiceInterface
         return $this->sendDeletePost($userId, $postId);
     }
 
+    public function getPosts(Uuid $userId, Uuid $groupId): array
+    {
+        return $this->sendGetPostsForGroup($userId, $groupId);
+    }
+
     /**
      * @param mixed $data
      */
@@ -69,7 +74,7 @@ class PostService implements PostServiceInterface
                         'Content-Type' => 'application/json',
                         'Accept' => 'application/json',
                     ],
-                    'body' => \json_encode(['userId' => $userId->toRfc4122()])
+                    'body' => \json_encode(['userId' => $userId->toRfc4122()]),
                 ]
             )->getStatusCode() === Response::HTTP_OK;
         } catch (TransportExceptionInterface) {
@@ -77,19 +82,25 @@ class PostService implements PostServiceInterface
         }
     }
 
-    private function sendGetPostsForGroup(Uuid $groupId): array
+    private function sendGetPostsForGroup(Uuid $userId, Uuid $groupId): array
     {
         try {
-            return \json_decode($this->httpClient->request(
-                    Request::METHOD_GET,
-                    $this->baseUrl . '/post/group/' . $groupId->toRfc4122(),
-                    [
-                        'headers' => [
-                            'Content-Type' => 'application/json',
-                            'Accept' => 'application/json',
-                        ],
-                    ]
-                )->getContent(), true, flags: \JSON_THROW_ON_ERROR) ?: [];
+            $response = $this->httpClient->request(
+                Request::METHOD_GET,
+                $this->baseUrl . '/post/group/' . $groupId->toRfc4122() . '/' . $userId->toRfc4122(),
+                [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ],
+                    'body' => \json_encode(['userId' => $userId->toRfc4122()]),
+                ]
+            );
+            if ($response->getStatusCode() !== Response::HTTP_OK) {
+                return [];
+            }
+
+            return \json_decode($response->getContent(), true, flags: \JSON_THROW_ON_ERROR) ?: [];
         } catch (TransportExceptionInterface) {
             return [];
         }

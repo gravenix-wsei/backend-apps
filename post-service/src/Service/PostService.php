@@ -39,11 +39,25 @@ class PostService implements PostServiceInterface
         ) > 0;
     }
 
-    public function getPostsFromGroup(Uuid $groupId): array
+    public function getPostsFromGroup(Uuid $userId, Uuid $groupId): array
     {
-        return $this->connection->executeQuery(
+        if (!$this->canUserPostToGroup($userId, $groupId)) {
+            return [];
+        }
+
+        $data = $this->connection->executeQuery(
             "SELECT * FROM group_post WHERE group_id = {$groupId->toHex()}"
         )->fetchAllAssociative();
+
+        return \array_map(
+            static fn($element) => [
+                'id' => Uuid::fromString($element['group_post_id'] ?? ''),
+                'groupId' => Uuid::fromString($element['group_id'] ?? ''),
+                'createdById' => Uuid::fromString($element['created_by_id'] ?? ''),
+                'content' => $element['content'] ?? '',
+            ],
+            $data
+        );
     }
 
     public function canUserPostToGroup(Uuid $userId, Uuid $groupId): bool
